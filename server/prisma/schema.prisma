@@ -15,7 +15,7 @@ datasource db {
 model User{
   id String @id @default(uuid())
   email String @unique
-  password String
+  hashPassword String
   apikeys ApiKey[]
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
