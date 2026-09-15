@@ -18,17 +18,17 @@ type ussageLogPayload = {
 
 }
 
-const genAPIKey = () => {
+const genAPIKey = (prefix:string) => {
     const secretKey = crypto.randomBytes(10).toString('hex');
-    return `sk_test_${secretKey}`
+    return `sk_${prefix.toLocaleLowerCase()}_${secretKey}`
 }
 
 const hashAPIKey = (rawKey: string) => {
     return crypto.createHash("sha256").update(rawKey).digest('hex');
 }
 
-const genUserKey = async (payload: genKeyPayLoad): Promise<keyRespond> => {
-    const userKey = genAPIKey();
+export const genUserKey = async (payload: genKeyPayLoad): Promise<keyRespond> => {
+    const userKey = genAPIKey(payload.name);
     const hashKey = hashAPIKey(userKey);
     const storeKey = await prisma.apiKey.create({
         data: {
@@ -37,10 +37,10 @@ const genUserKey = async (payload: genKeyPayLoad): Promise<keyRespond> => {
             userId: payload.userId
         }
     })
-    return { apiKey: userKey }
+    return { apiKey: userKey } 
 } 
 
-const validateKey = async (payload : validatePayload)=>{
+export const validateKey = async (payload : validatePayload)=>{
     const hashIncomingKey = hashAPIKey(payload.key);
     const activeKey = await prisma.apiKey.findUnique({
         where:{

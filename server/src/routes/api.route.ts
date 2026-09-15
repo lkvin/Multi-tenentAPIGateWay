@@ -4,6 +4,6 @@ import { reqAPIKey } from "../controllers/api.controller.js";
 
 const apiRoute : Router = express.Router();
 
-apiRoute.get("/keys",authenticateUser,reqAPIKey);
+apiRoute.post("/keys",authenticateUser,reqAPIKey);
 
 export {apiRoute};
